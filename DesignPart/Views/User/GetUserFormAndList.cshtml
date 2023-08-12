@@ -1,0 +1,208 @@
+﻿
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+<script src="~/js/site.js" asp-append-version="true"></script>
+
+
+<div class="container-fluid">
+    <form id="userForm">
+        <fieldset>
+            <h3 class="text-primary">User Form</h3>
+            <a id="CreateNew" class="btn btn-primary btn-sm">
+                <i class="fa-solid fa-plus-circle"></i>
+                Create New
+            </a>
+            <input type="hidden" name="Id" id="Id" value="" />
+            <div class="form-group mb-3">
+                <label class="form-label">Name</label>
+                <input type="text" class="form-control" id="Username" name="Username" placeholder="Enter User Name" />
+            </div>
+            <div class="form-group mb-3">
+                <label class="form-label">Contact Number</label>
+                <input type="text" class="form-control" id="Mobile" name="Mobile" placeholder="Enter Contact Number" />
+            </div>
+            <div class="form-group mb-3">
+                <label class="form-label">Email Address</label>
+                <input type="text" class="form-control" id="Email" name="Email" placeholder="Enter Email Address" />
+            </div>
+            <div class="form-group mb-3">
+                <label class="form-label">Password</label>
+                <input type="text" class="form-control" id="Password" name="Password" placeholder="Enter Password Address" />
+            </div>
+            <button type="button" class="btn btn-success" id="btnSave">Save</button>
+        </fieldset>
+    </form>
+    <br />
+    <h3 class="text-primary">User List</h3>
+    <table class="table table-bordered table-striped table-hover mb-2">
+        <thead>
+            <tr>
+                <th>User ID</th>
+                <th>Name</th>
+                <th>Contact Number</th>
+                <th>Email Address</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="userListDiv">
+        </tbody>
+    </table>
+</div>
+
+<script>
+    $(document).ready(function(){
+        LoadUserList();
+        var currentRow;
+    });
+    function LoadUserList() {
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Action("GetUserList","User")',
+            success: function (response) {
+                if (response != undefined || response != null) {
+                    if (response.isSuccess) {
+                        var list = response.data;
+                        var row;
+                        for (var i = 0; i < list.length; i++) {
+                            row += `<tr>
+                                        <td>${list[i].id}</td>
+                                        <td>${list[i].username}</td>
+                                        <td>${list[i].mobile}</td>
+                                        <td>${list[i].email}</td>
+                                        <td>
+                                            <button type="button" class="btn btn-warning" onclick='Edit(${list[i].id},this)'><i class="fa-solid fa-edit"></i></button>
+                                                <button type="button" class="btn btn-danger" onclick='Delete(${list[i].id},this)'><i class="fa-solid fa-trash-can"></i></button>
+                                        </td>
+                                    </tr>`;
+                        }
+                        $('#userListDiv').html(row);
+                    }
+                    else {
+                        alert('Error');
+                    }
+                }
+                else {
+                    alert('Error');
+                }
+            },
+            error: function (err) {
+                alert(err);
+            }
+        });
+    }
+
+    function Edit(id, element){
+        currentRow = $(element).closest('tr');
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Action("Edit","User")',
+            data: { uid: id },
+            success: function (response) {
+                if (response != undefined || response != null) {
+                    if (response.isSuccess) {
+                        $('#Id').val(response.data.id);
+                        $('#Username').val(response.data.username);
+                        $('#Mobile').val(response.data.mobile);
+                        $('#Email').val(response.data.email);
+                        $('#Password').val(response.data.password);
+                    }
+                    else {
+                        notyf.open({ type: 'error', message: response.message });
+                    }
+                }
+                else {
+                    notyf.open({ type: 'error', message: "Something went wrong." });
+                }
+            },
+            error: function (err) {
+                    console.log(err.statusText);
+                    alert(err.statusText);
+                    notyf.open({ type: 'error', message: err.statusText });
+            }
+        });
+    }
+    function Delete(id, element) {
+        currentRow = $(element).closest('tr');
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("Delete","User")',
+            data: { uid: id },
+            success: function (response) {
+                if (response != undefined || response != null) {
+                    if (response.isSuccess) {
+                        currentRow.remove();
+                        notyf.open({ type: 'success', message: response.message });
+                    }
+                    else {
+                        notyf.open({ type: 'error', message: response.message });
+                    }
+                }
+                else {
+                    notyf.open({ type: 'error', message: "Something went wrong." });
+                }
+            },
+            error: function (err) {
+                console.log(err.statusText);
+                alert(err.statusText);
+                notyf.open({ type: 'error', message: err.statusText });
+            }
+        });
+    }
+
+    $('#btnSave').click(function () {
+        var _uid = $('#Id').val();
+        var _name = $('#Username').val();
+        var _email = $('#Email').val();
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("SaveUser","User")',
+            data: $('#userForm').serialize(),
+            success: function (response) {
+                if (response != undefined || response != null) {
+                    if (response.isSuccess) {
+                        var data = response.data;
+                        if (_uid > 0) {
+                            currentRow.find('td:eq(1)').text(data.username);
+                            currentRow.find('td:eq(2)').text(data.mobile);
+                            currentRow.find('td:eq(3)').text(data.email);
+                            notyf.open({ type: 'success', message: "Records saved successfully." });
+                            $('#userForm')[0].reset();
+                        }
+                        else {
+                            var row = `<tr>
+                                            <td>${data.id}</td>
+                                            <td>${data.username}</td>
+                                            <td>${data.mobile}</td>
+                                            <td>${data.email}</td>
+                                            <td>
+                                                <button type="button" class="btn btn-warning" onclick='Edit(${data.id},this)'><i class="fa-solid fa-edit"></i></button>
+                                                <button type="button" class="btn btn-danger" onclick='Delete(${data.id},this)'><i class="fa-solid fa-trash-can"></i></button>
+                                            </td>
+                                           </tr>`;
+                            $('#userListDiv').append(row);
+                            notyf.open({ type: 'success', message: "Records saved successfully." });
+                            $('#userForm')[0].reset();
+                        }
+                    }
+                    else {
+                        notyf.open({ type: 'error', message: "Something went wrong." });
+                    }
+                }
+                else {
+                    notyf.open({ type: 'error', message: response.message });
+                }
+            },
+            error: function (err) {
+                console.log(err.statusText);
+                alert(err.statusText);
+                notyf.open({ type: 'error', message: err.statusText });
+            }
+        });
+    });
+    $('#CreateNew').click(function () {
+        $('form :input').val('');
+        $('#userForm')[0].reset();
+    });
+</script>

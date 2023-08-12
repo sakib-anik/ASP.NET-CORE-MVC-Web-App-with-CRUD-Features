@@ -1,0 +1,63 @@
+﻿@model DesignPart.Models.ViewModel.SignUpUserViewModel
+
+@{
+    ViewData["Title"] = "SignUp";
+    Layout = "~/Views/Shared/_Layout_Login.cshtml";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-6 offset-3 border border-primary rounded mt-5">
+            <div class="text-center">
+                <h1 class="text-info">User Registration form</h1>
+            </div>
+            <h3 class="text-danger text-center">@TempData["errorMessage"]</h3>
+            <form method="post" asp-action="SignUp" class="pl-3 pr-3">
+                <div class="form-group  pl-3 pr-3">
+                    <label asp-for="Username"></label>
+                    <input type="text" asp-for="Username" class="form-control" autocomplete="off" placeholder="Enter username" />
+                    <span asp-validation-for="Username" class="text-danger"></span>
+                </div>
+                <div class="form-group mt-2 pl-3 pr-3">
+                    <label asp-for="Email"></label>
+                    <input type="email" asp-for="Email" class="form-control" autocomplete="off" placeholder="Enter email" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="form-group mt-2 pl-5 pr-3">
+                    <label asp-for="Mobile"></label>
+                    <input type="text" asp-for="Mobile" class="form-control" autocomplete="off" placeholder="Enter mobile number" />
+                    <span asp-validation-for="Mobile" class="text-danger"></span>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group mt-2 pl-3 pr-3">
+                            <label asp-for="Password"></label>
+                            <input type="password" asp-for="Password" class="form-control" autocomplete="off" placeholder="Enter password" />
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group mt-2 pl-3 pr-3">
+                            <label asp-for="ConfirmPassword"></label>
+                            <input type="password" asp-for="ConfirmPassword" class="form-control" autocomplete="off" placeholder="Enter confirm password" />
+                            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label asp-for="IsActive"></label>
+                    <input type="checkbox" checked="checked" asp-for="IsActive" />
+                </div>
+                <div class="form-group mt-2 pl-3 pr-3">
+                    <input type="submit" class="btn btn-success btn-lg mb-1 float-right" value="Register" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>

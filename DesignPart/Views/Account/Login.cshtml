@@ -1,0 +1,85 @@
+﻿@model DesignPart.Models.ViewModel.LoginSignUpViewModel
+
+@{
+    ViewData["Title"] = "Login";
+    Layout = "~/Views/Shared/_Layout_Login.cshtml";
+}
+
+<style>
+    #login-form input[type="password"],
+    #login-form input[type="text"] {
+        width: 100%;
+        padding: 6px 0px;
+        box-sizing: border-box;
+    }
+
+    .password-container{
+        width:auto;
+        position: relative;
+    }
+
+    .fa-eye{
+        position: absolute;
+        top: 28%;
+        right: 4%;
+        cursor: pointer;
+        color: lightgray;
+    }
+
+</style>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<div class="container">
+    <div class="row">
+        <div class="col-4 offset-4 border border-primary rounded mt-5">
+            <div class="text-center">
+                <h1 class="text-info">User Login form</h1>
+            </div>
+            <h6 class="text-success text-center">@TempData["successMessage"]</h6>
+            <form method="post" asp-action="Login" class="pl-3 pr-3" id="login-form">
+                <div class="form-group  pl-3 pr-3">
+                    <label asp-for="Email"></label>
+                    <input type="email" asp-for="Email" class="form-control" autocomplete="off" placeholder="Enter Email" />
+                    <span class="text-danger">@TempData["errorEmail"]</span>
+                </div>
+               
+                
+                <div class="form-group mt-2 pl-3 pr-3">
+                    <label asp-for="Password"></label>
+                    <div class="password-container">
+                        <input type="password" asp-for="Password" class="form-control" autocomplete="off" placeholder="Enter password" id="passwordField"/>
+                        <span class="text-danger">@TempData["errorPassword"]</span><p></p>
+                        <input type="checkbox" id="showPasswordCheckbox" /> Show Password
+                    </div>
+                </div>
+                <div class="form-group mt-2 pl-3 pr-3">
+                    <input type="checkbox" asp-for="IsRemember"/>
+                    <label asp-for="IsRemember"></label>
+                </div>
+                <div class="form-group mt-2 pl-3 pr-3">
+                    <input type="submit" class="btn btn-success btn-lg mb-1 float-right btn-block" value="Login" />
+                </div>
+            </form>
+            <div class="text-center">
+                <a class="text-primary" asp-action="ForgotPassword">Forgot Password?</a>
+            </div>
+            <div class="text-end">
+                <a class="text-light btn btn-primary font-weight-bold mb-2" asp-action="SignUp" asp-controller="Account">Sign Up</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const showPasswordCheckbox = document.querySelector('#showPasswordCheckbox');
+    const passwordField = document.querySelector('#passwordField');
+    showPasswordCheckbox.addEventListener("change", function () {
+        if (showPasswordCheckbox.checked) {
+            passwordField.type = 'text';
+        }
+        else {
+            passwordField.type = 'password';
+        }
+    });
+</script>

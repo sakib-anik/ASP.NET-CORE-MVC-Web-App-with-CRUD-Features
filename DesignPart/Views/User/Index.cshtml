@@ -1,0 +1,29 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="text-center bg-light py-3 text-white shadow-sm border">
+    <h1 class="fw-bold text-dark">Users</h1>
+</div>
+
+<div id="contentDiv"></div>
+
+<script>
+    $(document).ready(function () {
+        LoadUserFormAndList();
+    });
+    function LoadUserFormAndList(){
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Action("GetUserFormAndList","User")',
+            success: function (response) {
+                $('#contentDiv').html(response);
+            },
+            error: function (err) {
+                alert(err);
+            }
+        });
+    }
+</script>
