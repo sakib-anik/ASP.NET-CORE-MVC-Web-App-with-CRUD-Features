@@ -1,0 +1,2 @@
+# ASP.NET-CORE-MVC-Web-App-with-CRUD-Features
+This is an Web App with CRUD features built with ASP.NET CORE MVC 6.0, HTML, CSS, Javascript, Jquery, Bootstrap. I have used AJAX.  You can do CRUD operations on your data without page reload or refresh with this project.  There are also Login, SignUp Validation, Authentication, Authorization, SignOut Features etc. The notifications customization is done by Notyf. I would like to thank Eunoia IT Solutions (EIS) for giving me proper support during building this wonderful project. Send me your thoughts.
